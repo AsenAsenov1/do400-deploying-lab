@@ -33,5 +33,16 @@ pipeline {
                 }
             }
         }
+        stage("Deploy to Test") {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'QUAY_USER', usernameVariable: 'QUAY_USERNAME', passwordVariable: 'QUAY_PASSWORD')]) {
+                    sh """
+                    oc set image deployment home-automation \
+                    home-automation=quay.io/${QUAY_USERNAME}/do400-deploying-lab:build-${BUILD_NUMBER} \
+                    -n RHT_OCP4_DEV_USER-deploying-lab-test --record
+                    """
+                }
+            }
+        }
     }
 }
