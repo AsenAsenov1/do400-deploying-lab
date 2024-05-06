@@ -34,6 +34,8 @@ pipeline {
             }
         }
         stage("Deploy to Test") {
+            when { not { branch "main" } }
+            
             steps {
                 withCredentials([usernamePassword(credentialsId: 'QUAY_USER', usernameVariable: 'QUAY_USERNAME', passwordVariable: 'QUAY_PASSWORD')]) {
                     sh """
@@ -45,6 +47,8 @@ pipeline {
             }
         }
         stage("Deploy to Prod") {
+            when { branch "main" }
+            
             steps {
                 withCredentials([usernamePassword(credentialsId: 'QUAY_USER', usernameVariable: 'QUAY_USERNAME', passwordVariable: 'QUAY_PASSWORD')]) {
                     sh """
